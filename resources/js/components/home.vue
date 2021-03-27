@@ -8,7 +8,7 @@
                     </md-card-media>
 
                     <md-card-header>
-                        <div class="md-title">{{photo.title}}</div>
+                        <div class="md-title">{{ photo.title }}</div>
                         <div class="md-subhead">Description</div>
                     </md-card-header>
                 </md-card>
@@ -21,20 +21,42 @@
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 
 export default {
-    computed: {},
     data: function () {
         return {
             photos: []
         }
     },
-    mounted: function () {
-        axios.get('/api/photos')
-            .then(result => {
 
-                this.photos = result.data.data;
-            }).catch(err => console.log(err))
+    computed: {
+        ...mapGetters([
+            'filters'
+        ])
+    },
+    watch: {
+        filters(newVal){
+            this.getPhotos()
+        },
+    },
+    methods: {
+        getPhotos() {
+
+            const filters = this.filters.length ? this.filters.join() : null;
+
+            axios.get('/api/photos', {
+                params: {
+                    filters: filters
+                }
+            })
+                .then(result => {
+                    this.photos = result.data.data;
+                }).catch(err => console.log(err))
+        }
+    },
+    mounted: function () {
+        this.getPhotos()
     }
 
 };

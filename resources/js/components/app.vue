@@ -22,34 +22,20 @@
                     <span class="md-list-item-text">Upload</span>
                 </md-list-item>
 
-                <!--                <md-list-item>-->
-                <!--                    <md-icon>send</md-icon>-->
-                <!--                    <span class="md-list-item-text">Sent Mail</span>-->
-                <!--                </md-list-item>-->
-
-                <!--                <md-list-item>-->
-                <!--                    <md-icon>delete</md-icon>-->
-                <!--                    <span class="md-list-item-text">Trash</span>-->
-                <!--                </md-list-item>-->
-
-                <!--                <md-list-item>-->
-                <!--                    <md-icon>error</md-icon>-->
-                <!--                    <span class="md-list-item-text">Spam</span>-->
-                <!--                </md-list-item>-->
             </md-list>
 
             <md-toolbar class="md-transparent" md-elevation="0">
                 <span class="md-title">Filter photos</span>
             </md-toolbar>
-                    <md-list :md-expand-single="expandSingle" v-if="categories">
-                        <md-list-item md-expand v-for="cat in categories" :key="cat.id">
+                    <md-list v-if="tags">
+                        <md-list-item md-expand>
                             <md-icon>users</md-icon>
-                            <span class="md-list-item-text">{{cat.name}}</span>
+                            <span class="md-list-item-text">People</span>
 
                             <md-list slot="md-expand">
-                                <md-list-item class="md-inset" v-for="tag in cat.tags" :key="tag.id">
+                                <md-list-item class="md-inset" v-for="tag in tags">
 
-                                    <md-checkbox v-model="tags" :value="tag.id">
+                                    <md-checkbox  v-model="filters" :value="tag.id">
                                         {{tag.name}}
                                     </md-checkbox>
                                 </md-list-item>
@@ -77,28 +63,20 @@ export default {
         showSidepanel: false,
         expandSingle: false,
         expandNews: false,
-        categories: [],
-        tags: []
+        tags: [],
+        filters: [],
+
     }),
     methods: {
       handleFilters() {
-          axios
-              .get('/api/photos', {
-                  params: {
-                      filters: this.tags
-                  }
-              })
-              .then(result => {
-                  this.categories = result.data
-              })
-              .catch(err => console.log(err))
+        this.$store.dispatch('addFilters', this.filters)
       }
     },
     mounted() {
         axios
-            .get('/api/categories')
+            .get('/api/tags')
             .then(result => {
-                this.categories = result.data
+                this.tags = result.data
             })
             .catch(err => console.log(err))
     }

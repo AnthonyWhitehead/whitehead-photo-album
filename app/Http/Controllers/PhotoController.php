@@ -16,13 +16,21 @@ class PhotoController extends Controller
      */
     public function index(Request $request)
     {
-//        dd($request->input('filters'));
-//
-//        dd(Photo::with(['tags' => function($q) use ($request) {
-//            $q->whereIn('id', $request->input('filters'));
-//        }])->get());
 
-        return PhotoResource::collection();
+        if($request->input('filters')) {
+
+
+            $filters = explode(',', $request->input('filters'));
+
+            $photos = Photo::whereHas('tags', function ($q) use ($filters) {
+                $q->whereIn('id', $filters);
+            })->get();
+
+        } else {
+            $photos = Photo::all();
+        }
+
+        return PhotoResource::collection($photos);
     }
 
     /**

@@ -9,8 +9,8 @@ class Tag extends Model
 {
     use HasFactory;
 
-    public function categories()
+    public function photos()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Photo::class);
     }
 }

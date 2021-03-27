@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resources([
     'photos' => PhotoController::class,
-    'categories' => CategoryController::class
+    'tags' => TagController::class
 ]);
