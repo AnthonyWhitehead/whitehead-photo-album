@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div v-if="photos" class="md-layout md-gutter md-alignment-center">
-            <div v-for="photo in photos" :key="photo.id" class="md-layout-item md-small-size-100">
+        <div v-if="photos" class="md-layout md-gutter md-alignment-start">
+            <div v-for="photo in photos" :key="photo.id" class="md-layout-item md-medium-size-25 md-small-size-100">
                 <md-card>
                     <md-card-media>
                         <img :src="photo.url" alt="photo.title">

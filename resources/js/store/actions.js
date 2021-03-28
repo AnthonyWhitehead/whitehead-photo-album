@@ -1,5 +1,9 @@
 export default {
-    addFilters ({commit}, filters) {
-        commit('addFilters', filters)
+    setFilters ({commit}, filters) {
+        commit('setFilters', filters)
+    },
+    setTags ({commit}, tags) {
+        commit('setTags', tags)
     }
+
 }

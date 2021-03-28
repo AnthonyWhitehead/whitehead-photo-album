@@ -6,9 +6,6 @@
             </md-button>
             <span class="md-title">Whitehead Family Photos</span>
 
-            <div class="md-toolbar-section-end">
-                <md-button @click="showSidepanel = true">Favorites</md-button>
-            </div>
         </md-toolbar>
 
         <md-drawer :md-active.sync="showNavigation" md-swipeable>
@@ -19,7 +16,9 @@
             <md-list>
                 <md-list-item>
                     <md-icon>upload</md-icon>
-                    <span class="md-list-item-text">Upload</span>
+                    <span class="md-list-item-text">
+                        <router-link :to="{name: 'upload'}">Upload</router-link>
+                    </span>
                 </md-list-item>
 
             </md-list>
@@ -33,7 +32,7 @@
                             <span class="md-list-item-text">People</span>
 
                             <md-list slot="md-expand">
-                                <md-list-item class="md-inset" v-for="tag in tags">
+                                <md-list-item class="md-inset" v-for="tag in tags" :key="tag.id">
 
                                     <md-checkbox  v-model="filters" :value="tag.id">
                                         {{tag.name}}
@@ -56,6 +55,9 @@
 </template>
 
 <script>
+
+import {mapGetters} from 'vuex'
+
 export default {
     name: 'app',
     data: () => ({
@@ -63,10 +65,14 @@ export default {
         showSidepanel: false,
         expandSingle: false,
         expandNews: false,
-        tags: [],
         filters: [],
 
     }),
+    computed: {
+      ...mapGetters([
+          'tags'
+      ])
+    },
     methods: {
       handleFilters() {
         this.$store.dispatch('addFilters', this.filters)
@@ -76,7 +82,7 @@ export default {
         axios
             .get('/api/tags')
             .then(result => {
-                this.tags = result.data
+                this.$store.dispatch('setTags', result.data)
             })
             .catch(err => console.log(err))
     }

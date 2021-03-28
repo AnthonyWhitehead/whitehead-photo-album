@@ -17,7 +17,7 @@ class PhotoController extends Controller
     public function index(Request $request)
     {
 
-        if($request->input('filters')) {
+        if ($request->input('filters')) {
 
 
             $filters = explode(',', $request->input('filters'));
@@ -36,30 +36,29 @@ class PhotoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
 
-        $photos = [];
+        $tags = explode(',', $request->input('tags'));
 
-        foreach ($request->allFiles() as $key => $value){
+        $path = $request->file('photo')->store('', 's3');
+        $photo = new Photo();
+        $photo->title = $request->input('title');
+        $photo->description = $request->input('description');
+        $photo->slug = \Str::slug($request->input('title'));
+        $photo->img_path = $path;
+        $photo->save();
 
-            $path = $value->store('', 's3');
 
-            $photo = new Photo();
-            $photo->title = $key;
-            $photo->slug = \Str::slug($key);
-            $photo->img_path = $path;
-            $photo->save();
-
-            array_push($photos, $photo);
-        }
+        $photo->tags()->attach($tags);
 
 
 
-        return response($photos);
+
+        return response($photo);
     }
 
 
@@ -78,8 +77,8 @@ class PhotoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -90,7 +89,7 @@ class PhotoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

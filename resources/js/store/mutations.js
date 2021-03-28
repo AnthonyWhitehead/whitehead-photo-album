@@ -1,5 +1,8 @@
 export default {
-    addFilters(state, filters) {
+    setFilters(state, filters) {
         state.filters = filters;
+    },
+    setTags(state, tags) {
+        state.tags = tags;
     }
 }
